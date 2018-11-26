@@ -1,9 +1,11 @@
 extern crate keycloak_validation;
 extern crate simple_server;
 
+const AUTHORIZATION: &str = "Authorization";
+
 fn main() {
     let server = simple_server::Server::new(|request, mut response| {
-        let authorization_header = request.headers().get(keycloak_validation::AUTHORIZATION);
+        let authorization_header = request.headers().get(AUTHORIZATION);
         match authorization_header {
             Some(authorization_header) => {
                 let user_info = keycloak_validation::verify(
@@ -15,7 +17,7 @@ fn main() {
                 match user_info {
                     Result::Ok(val) => Ok(response
                         .header("Content-Type", "application/json".as_bytes())
-                        .body(val.as_bytes().to_vec())?),
+                        .body(format!("{}", val.user_info).as_bytes().to_vec())?),
                     Result::Err(err) => Ok(response.body(err.as_bytes().to_vec())?),
                 }
             }

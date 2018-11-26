@@ -1,18 +1,40 @@
+#![warn(missing_docs)]
+//! This crate allows user authentication, using the validation of a keycloak access token.
+//! Local validation of a token is hard to get right, so the validation is delegated to the keycloak server.
+
 extern crate reqwest;
+extern crate serde_json;
 
-pub const AUTHORIZATION: &str = "Authorization";
+/// This signifies that the user described in 'user_info' has been authenticated.
+#[derive(Debug)]
+pub struct Authentication {
+    /// User info given during authentication
+    pub user_info: serde_json::Value,
+}
 
-pub fn verify(authorization_header: &str, host_url: &str, realm: &str) -> Result<String, String> {
+/// Verify an access token in an authorization header, using a keycloak server.
+/// If this verification succeeds, then the user is authenicated.
+pub fn verify(
+    authorization_header: &str,
+    host_url: &str,
+    realm: &str,
+) -> Result<Authentication, String> {
     // Skip any prefix like 'Bearer ' of 'Authorization: Bearer '
     let access_token = authorization_header
         .split(' ')
         .last()
         .ok_or("Empty authorization header")?;
 
-    let user_info_url = format!(
-        "{}/auth/realms/{}/protocol/openid-connect/userinfo",
-        host_url, realm
-    );
+    let realm_url = format!("{}/auth/realms/{}", host_url, realm);
+
+    get_user_info(access_token, &realm_url)
+        .map(|user_info| Authentication { user_info })
+        .map_err(|e| format!("{}", e))
+}
+
+/// Fetch user info from a keycloak server using the user's access token.
+fn get_user_info(access_token: &str, realm_url: &str) -> Result<serde_json::Value, String> {
+    let user_info_url = format!("{}/protocol/openid-connect/userinfo", realm_url);
     let mut response = reqwest::Client::new()
         .get(&user_info_url)
         .bearer_auth(access_token)
@@ -20,7 +42,7 @@ pub fn verify(authorization_header: &str, host_url: &str, realm: &str) -> Result
         .map_err(|e| format!("{}", e))?;
 
     if response.status().is_success() {
-        response.text().map_err(|e| format!("{}", e))
+        response.json().map_err(|e| format!("{}", e))
     } else {
         Err(String::from("Invalid token"))
     }
