@@ -1,0 +1,11 @@
+
+[package]
+name = "keycloak_validation"
+version = "0.1.0"
+authors = ["Tinus Van Langendonck <tvl@scoutsengidsenvlaanderen.be>"]
+
+[dependencies]
+reqwest = "0.9.5"
+
+[dev-dependencies]
+simple-server = "0.4.0"
