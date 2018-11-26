@@ -1,6 +1,6 @@
 # Keycloak validation
 
-This crate allows the validation of a keycloak access token.
+This crate allows the validation of a keycloak access token. Local validation of a token is hard to get right, so the validation is delegated to the keycloak server.
 
 ## Example
 
@@ -12,7 +12,7 @@ fn main() {
     let validation = keycloak_validation::verify(
         "0123456789", // or "Bearer 0123456789" or "Authorization: Bearer 0123456789"
         "https://www.my-keycloak-website.org",
-        "realm-name",
+        "my-realm-name",
     );
 
     match validation {
