@@ -19,5 +19,9 @@ pub fn verify(authorization_header: &str, host_url: &str, realm: &str) -> Result
         .send()
         .map_err(|e| format!("{}", e))?;
 
-    response.text().map_err(|e| format!("{}", e))
+    if response.status().is_success() {
+        response.text().map_err(|e| format!("{}", e))
+    } else {
+        Err(String::from("Invalid token"))
+    }
 }
