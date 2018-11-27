@@ -8,22 +8,23 @@ fn main() {
         let authorization_header = request.headers().get(AUTHORIZATION);
         match authorization_header {
             Some(authorization_header) => {
-                let user_info = keycloak_validation::verify(
+                let authentication_result = keycloak_validation::verify(
                     authorization_header.to_str().unwrap(),
                     "https://login-dev.scoutsengidsenvlaanderen.be",
                     "scouts",
+                    std::time::Duration::from_secs(3),
                 );
 
-                match user_info {
-                    Result::Ok(val) => Ok(response
+                match authentication_result {
+                    Result::Ok(authentication) => Ok(response
                         .header("Content-Type", "application/json".as_bytes())
-                        .body(format!("{}", val.user_info).as_bytes().to_vec())?),
-                    Result::Err(err) => Ok(response.body(err.as_bytes().to_vec())?),
+                        .body(format!("{}", authentication.user_info).as_bytes().to_vec()).unwrap()),
+                    Result::Err(err) => Ok(response.body(err.as_bytes().to_vec()).unwrap()),
                 }
             }
             None => Ok(response
                 .header("Content-Type", "text/html".as_bytes())
-                .body(APITEST.as_bytes().to_vec())?),
+                .body(APITEST.as_bytes().to_vec()).unwrap()),
         }
     });
 
