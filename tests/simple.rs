@@ -28,8 +28,6 @@ pub fn setup(port: &str, timout_millis: u64) {
 
         keycloak_dummy_server.listen("localhost", &port_serve);
     });
-
-    //std::thread::sleep(std::time::Duration::from_millis(200))
 }
 
 #[test]
