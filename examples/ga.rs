@@ -1,5 +1,5 @@
-extern crate keycloak_validation;
-extern crate simple_server;
+use keycloak_validation;
+use simple_server;
 
 const AUTHORIZATION: &str = "Authorization";
 

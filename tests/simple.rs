@@ -1,4 +1,4 @@
-extern crate keycloak_validation;
+use keycloak_validation;
 
 pub fn setup(port: &str, timout_millis: u64) {
     let port_serve = String::from(port);

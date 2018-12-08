@@ -3,6 +3,7 @@
 name = "keycloak_validation"
 version = "0.1.0"
 authors = ["Tinus Van Langendonck <tvl@scoutsengidsenvlaanderen.be>"]
+edition = "2018"
 
 [dependencies]
 reqwest = "0.9.5"

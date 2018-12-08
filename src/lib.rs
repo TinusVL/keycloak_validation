@@ -2,8 +2,8 @@
 //! This crate allows user authentication, using the validation of a keycloak access token.
 //! Local validation of a token is hard to get right, so the validation is delegated to the keycloak server.
 
-extern crate reqwest;
-extern crate serde_json;
+use reqwest;
+use serde_json;
 
 /// This signifies that the user described in 'user_info' has been authenticated.
 #[derive(Debug)]

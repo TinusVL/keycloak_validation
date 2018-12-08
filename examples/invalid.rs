@@ -1,4 +1,4 @@
-extern crate keycloak_validation;
+use keycloak_validation;
 
 fn main() {
     let authentication_result = keycloak_validation::verify(
