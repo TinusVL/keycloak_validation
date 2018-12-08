@@ -14,15 +14,20 @@ pub fn setup(port: &str, timout_millis: u64) {
                     .unwrap_or("Missing header");
                 if auth_header == "Bearer 012345678901234567890123456789" {
                     response.header("Content-Type", "application/json".as_bytes());
-                    Ok(response.body("{\"user\":\"authenticated\"}".as_bytes().to_vec()).unwrap())
+                    Ok(response
+                        .body("{\"user\":\"authenticated\"}".as_bytes().to_vec())
+                        .unwrap())
                 } else {
                     response.status(simple_server::StatusCode::UNAUTHORIZED);
                     Ok(response
-                        .body(format!("Wrong header: {}", auth_header).as_bytes().to_vec()).unwrap())
+                        .body(format!("Wrong header: {}", auth_header).as_bytes().to_vec())
+                        .unwrap())
                 }
             } else {
                 response.status(simple_server::StatusCode::NOT_FOUND);
-                Ok(response.body(format!("Wrong URL: {}", request.uri()).as_bytes().to_vec()).unwrap())
+                Ok(response
+                    .body(format!("Wrong URL: {}", request.uri()).as_bytes().to_vec())
+                    .unwrap())
             }
         });
 

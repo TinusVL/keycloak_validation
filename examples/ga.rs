@@ -18,13 +18,15 @@ fn main() {
                 match authentication_result {
                     Result::Ok(authentication) => Ok(response
                         .header("Content-Type", "application/json".as_bytes())
-                        .body(format!("{}", authentication.user_info).as_bytes().to_vec()).unwrap()),
+                        .body(format!("{}", authentication.user_info).as_bytes().to_vec())
+                        .unwrap()),
                     Result::Err(err) => Ok(response.body(err.as_bytes().to_vec()).unwrap()),
                 }
             }
             None => Ok(response
                 .header("Content-Type", "text/html".as_bytes())
-                .body(APITEST.as_bytes().to_vec()).unwrap()),
+                .body(APITEST.as_bytes().to_vec())
+                .unwrap()),
         }
     });
 
